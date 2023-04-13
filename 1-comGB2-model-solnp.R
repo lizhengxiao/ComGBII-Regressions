@@ -14,7 +14,7 @@ comGB2Reg.solnp <- function(y, X, control = list(print_level = 1,
   tol.rel <- control$tol.rel
   rho <- control$rho
 
-  k <- dim(X)[2] # numbers of parameters
+  k <- dim(X)[2] # Numbers of parameters
   
   mod.init <- pars.initialization(y = y, X = X)
   beta.init <- mod.init$beta.init
@@ -42,10 +42,10 @@ comGB2Reg.solnp <- function(y, X, control = list(print_level = 1,
     nu2 <- (delta2)/p2; tau2 <- sigma2/p2
     
     
-    loglike <- dcomGB2_v3(y = y,
-                          mu2 = as.vector(mu2),
-                          p1 = p1,
-                          p2 = p2, tau1 = tau1, tau2 = tau2, nu1 = nu1, nu2 = nu2, log = T)
+    loglike <- dcomGB2(y = y,
+                       mu2 = as.vector(mu2),
+                       p1 = p1,
+                       p2 = p2, tau1 = tau1, tau2 = tau2, nu1 = nu1, nu2 = nu2, log = T)
     ll <- -sum(loglike)
     if(is.na(ll) | is.infinite(ll)) ll <- 100000000000
     
@@ -133,11 +133,7 @@ comGB2Reg.solnp <- function(y, X, control = list(print_level = 1,
 }
 
 
-# model <- comGB2Reg.solnp(y = y, 
-#                          X = X, 
-#                          control = list(pars.init.n = 1))
-# model$X
-# class <- 'original'
+
 summary.comGB2 <- function(model, class = c('original', 
                                             'transformed')){
   pars <- model$estimate
@@ -199,6 +195,5 @@ summary.comGB2 <- function(model, class = c('original',
   return(out)
 }
 
-# summary.comGB2(model = model, class = 'original')
-# summary.comGB2(model = model, class = 'transformed')
+
 
