@@ -43,7 +43,7 @@ BIIGReg.solnp <- function(y, X, control = list(print_level = 1,
     nu2 <- (delta2)/p2; tau2 <- sigma2/p2
     
     
-    loglike <- dcomGB2_v3(y = y,
+    loglike <- dcomGB2(y = y,
                           mu2 = as.vector(mu2),
                           p1 = p1,
                           p2 = p2, tau1 = tau1, 

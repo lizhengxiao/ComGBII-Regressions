@@ -9,12 +9,12 @@ IPGReg.solnp <- function(y, X, control = list(print_level = 1,
   # X: design matrix
   
   print_level <- control$print_level
-  n.init <- control$pars.init.n # 初始化参数的组数
+  n.init <- control$pars.init.n 
   pars.seed <- control$pars.seed
   tol.rel <- control$tol.rel
   rho <- control$rho
 
-  k <- dim(X)[2] # 参数个数
+  k <- dim(X)[2] 
   
   mod.init <- pars.initialization(y = y, X = X)
   beta.init <- mod.init$beta.init
@@ -43,7 +43,7 @@ IPGReg.solnp <- function(y, X, control = list(print_level = 1,
     nu2 <- (delta2)/p2; tau2 <- sigma2/p2
     
     
-    loglike <- dcomGB2_v3(y = y,
+    loglike <- dcomGB2(y = y,
                           mu2 = as.vector(mu2),
                           p1 = p1,
                           p2 = p2, tau1 = tau1, 

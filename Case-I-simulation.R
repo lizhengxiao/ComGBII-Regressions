@@ -14,8 +14,6 @@ delta1 <- p1*nu1; delta2 <- p2*nu2
 
 pars1.true <- c(c(2, 0.5, 1), 
                log(c(p1, p2, tau1, tau2, nu1, nu2))) # true value
-pars2.true <- c(c(2, 0.5, 1), 
-                log(c(p1, p2, sigma1, sigma2, delta1, delta2))) # true value
 
 for (j in 1:Nsim){
   x1 <- rnorm(n = nsample, mean = 0, sd = 1)
