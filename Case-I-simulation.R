@@ -1,52 +1,86 @@
-## case I -----------------------------------------------------------
-library(gamlss)
-library(Rsolnp)
-set.seed(111)
-nsample <- 2000
-Nsim <- 10
-beta.mat <- matrix(0, nrow = Nsim, ncol = 3)
-alpha.mat <- matrix(0, nrow = Nsim, ncol = 6)
-p1 <- 1; p2 <- 1.5; 
-tau1 <- 1.5; tau2 <- 2; 
-nu1 <- 2; nu2 <- 2;
-sigma1 <- p1*tau1; sigma2 <- p2*tau2
-delta1 <- p1*nu1; delta2 <- p2*nu2
-
+library(gamlss) # load the gamlss package
+library(Rsolnp) # load the Rsolnp package
+set.seed(111) # set the seed for reproducibility
+nsample <- 2000 # set the sample size
+Nsim <- 20 # set the number of simulations
+beta.mat <- matrix(0, nrow = Nsim, ncol = 3) # initialize the matrix for storing beta estimates
+alpha.mat <- matrix(0, nrow = Nsim, ncol = 6) # initialize the matrix for storing alpha estimates
+p1 <- 1; p2 <- 1.5; # set values for p1 and p2
+tau1 <- 1.5; tau2 <- 2; # set values for tau1 and tau2
+nu1 <- 2; nu2 <- 2; # set values for nu1 and nu2
+sigma1 <- p1*tau1; sigma2 <- p2*tau2 # calculate sigma1 and sigma2
+delta1 <- p1*nu1; delta2 <- p2*nu2 # calculate delta1 and delta2
 pars1.true <- c(c(2, 0.5, 1), 
-               log(c(p1, p2, tau1, tau2, nu1, nu2))) # true value
+                log(c(p1, p2, tau1, tau2, nu1, nu2))) # true values of parameters
 
+
+# Loop over simulations
 for (j in 1:Nsim){
-  x1 <- rnorm(n = nsample, mean = 0, sd = 1)
-  x2 <- rnorm(n = nsample, mean = 0, sd = 1)
-  X1 <- model.matrix( ~ x1 + x2)
-  k <- dim(X1)[2]
-  pars <- pars1.true
-  beta <- pars[1:k]
-  mu2 <- exp(X1%*%beta)
-  p1 <- exp(pars[(k+1)]); p2 <- exp(pars[(k+2)])
-  tau1 <- exp(pars[(k+3)]); tau2 <- exp(pars[(k+4)])
-  nu1 <- exp(pars[(k+5)]); nu2 <- exp(pars[(k+6)])
-
-  p1*nu1 - 1
-  p2*nu2 - 1
-  ysim <- 0
-  for(i in 1:nsample){
+  # Generate normally distributed random variables
+  x1 <- rnorm(n = nsample, mean = 0, sd = 1) 
+  x2 <- rnorm(n = nsample, mean = 0, sd = 1) 
+  
+  # Create a model matrix with x1 and x2
+  X1 <- model.matrix( ~ x1 + x2) 
+  
+  # Get the number of columns in X1
+  k <- dim(X1)[2] 
+  
+  # Initialize the parameters with true values
+  pars <- pars1.true 
+  
+  # Get beta parameters from pars
+  beta <- pars[1:k] 
+  
+  # Calculate the expected value of mu2
+  mu2 <- exp(X1%*%beta) 
+  
+  # Calculate p1 and p2
+  p1 <- exp(pars[(k+1)]); p2 <- exp(pars[(k+2)]) 
+  
+  # Calculate tau1 and tau2
+  tau1 <- exp(pars[(k+3)]); tau2 <- exp(pars[(k+4)]) 
+  
+  # Calculate nu1 and nu2
+  nu1 <- exp(pars[(k+5)]); nu2 <- exp(pars[(k+6)]) 
+  
+  # Check if p1 and nu1 are greater than 1
+  p1*nu1 - 1 
+  
+  # Check if p2 and nu2 are greater than 1
+  p2*nu2 - 1 
+  
+  # Initialize the simulated response variable
+  ysim <- 0 
+  
+  # Loop over the sample size
+  for(i in 1:nsample){ 
+    # Simulate response variable using the qcomGB2 function
     ysim[i] <-  qcomGB2(p = runif(1, 0, 1), mu2 = as.numeric(mu2)[i], 
-                         p1 = p1, p2 = p2, nu1 = nu1, nu2 = nu2, tau1 = tau1, tau2 = tau2)
+                        p1 = p1, p2 = p2, nu1 = nu1, nu2 = nu2, tau1 = tau1, tau2 = tau2) 
   }
-  y <- ysim
-  X <- X1
-
-
+  
+  # Set y equal to the simulated response variable
+  y <- ysim 
+  
+  # Set X equal to the model matrix
+  X <- X1 
+  
+  # Use comGB2Reg.solnp to estimate the parameters
   tryCatch({
     mReg <- comGB2Reg.solnp(y = y, X = X, control = list(pars.init.n = 5, 
                                                          rho = 2, tol.rel = 1.0e-4))
   }, error = function(e) {
-    message('Return the next iteration')
+    message('Return the next loop ')
   })
   
+  # Get the estimates from mReg
   estimates <- mReg$estimate
+  
+  # Store beta estimates in the beta.mat matrix
   beta.mat[j,] <- estimates[1:k]
+  
+  # Store alpha estimates in the alpha.mat matrix
   alpha.mat[j,] <- estimates[(k+1):(k+6)]
 }
 
@@ -55,7 +89,8 @@ beta.true <- pars.true[1:3]
 alpha.true <- pars.true[4:9]
 
 
-# ggplot
+# ggplot -------------------------------------------------------------------------------------------------
+
 library(data.table)
 dtbeta <- data.frame(beta.mat)
 colnames(dtbeta) <- c('beta0', 'beta1', 'beta2')

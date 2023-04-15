@@ -10,12 +10,12 @@ BGReg.solnp <- function(y, X, control = list(print_level = 1,
   # X: design matrix
   
   print_level <- control$print_level
-  n.init <- control$pars.init.n # 初始化参数的组数
+  n.init <- control$pars.init.n 
   pars.seed <- control$pars.seed
   tol.rel <- control$tol.rel
   rho <- control$rho
   
-  k <- dim(X)[2] # 参数个数
+  k <- dim(X)[2] 
   
   mod.init <- pars.initialization(y = y, X = X)
   beta.init <- mod.init$beta.init
@@ -75,14 +75,11 @@ BGReg.solnp <- function(y, X, control = list(print_level = 1,
   alpha.init.mat <- matrix(0, nrow = 4, ncol = n.init)
   row.names(alpha.init.mat) <- c('p1', 'p2', 
                                  'sigma1', 'sigma2')
-  opt.result <- rep(0, n.init) # 定义存储优化结果的向量
+  opt.result <- rep(0, n.init)
   mReg.list <- list()
   for (j in 1:n.init) {
-    # 生成随机数
     random_nums <- rnorm(4, 0, 1)
-    # 判断条件是否符合要求
     while ((random_nums[1] < log(1))|(random_nums[2] < log(2))) {
-      # 如果不符合要求，重新生成随机数
       random_nums <-  rnorm(4, 0, 1)
     }
     alpha.init <- random_nums
@@ -102,8 +99,6 @@ BGReg.solnp <- function(y, X, control = list(print_level = 1,
                                    tol = tol.rel,
                                    trace = print_level))
     }, error = function(e) {
-      # 处理错误的代码
-      # 可以使用message()函数来输出错误信息
       message('Perform the next parameter initialization')
     })
     mReg.list[[j]] <- mReg
@@ -134,13 +129,6 @@ BGReg.solnp <- function(y, X, control = list(print_level = 1,
 }
 
 
-# model <- BGReg.solnp(y = y, 
-#                        X = X, 
-#                        control = list(pars.init.n = 1))
-# model$X
-# model$estimate
-# model$Hessian
-# class <- 'original'
 summary.BG <- function(model, class = c('original', 
                                           'transformed')){
   pars <- model$estimate
@@ -205,8 +193,6 @@ summary.BG <- function(model, class = c('original',
   return(out)
 }
 
-# summary.BGReg(model = model, class = 'original')
-# summary.BGReg(model = model, class = 'transformed')
 
 
 

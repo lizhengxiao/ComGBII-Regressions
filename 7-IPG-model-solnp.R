@@ -72,14 +72,11 @@ IPGReg.solnp <- function(y, X, control = list(print_level = 1,
   }
   alpha.init.mat <- matrix(0, nrow = 3, ncol = n.init)
   row.names(alpha.init.mat) <- c('p1', 'p2', 'sigma2')
-  opt.result <- rep(0, n.init) # 定义存储优化结果的向量
+  opt.result <- rep(0, n.init) 
   mReg.list <- list()
   for (j in 1:n.init) {
-    # 生成随机数
     random_nums <- rnorm(3, 0, 1)
-    # 判断条件是否符合要求
     while ((random_nums[1] <= 0.5*log(2))|(random_nums[2] <= log(2))) {
-      # 如果不符合要求，重新生成随机数
       random_nums <-  rnorm(3, 0, 1)
     }
     alpha.init <- random_nums
@@ -99,8 +96,6 @@ IPGReg.solnp <- function(y, X, control = list(print_level = 1,
                                    tol = tol.rel,
                                    trace = print_level))
     }, error = function(e) {
-      # 处理错误的代码
-      # 可以使用message()函数来输出错误信息
       message('Perform the next parameter initialization')
     })
     mReg.list[[j]] <- mReg
@@ -131,13 +126,7 @@ IPGReg.solnp <- function(y, X, control = list(print_level = 1,
 }
 
 
-# model <- IPGReg.solnp(y = y, 
-#                      X = X, 
-#                      control = list(pars.init.n = 1))
-# model$X
-# model$estimate
-# model$Hessian
-# class <- 'original'
+
 summary.IPG <- function(model, class = c('original', 
                                            'transformed')){
   pars <- model$estimate
@@ -202,8 +191,6 @@ summary.IPG <- function(model, class = c('original',
   return(out)
 }
 
-# summary.IPGReg(model = model, class = 'original')
-# summary.IPGReg(model = model, class = 'transformed')
 
 
 

@@ -1,4 +1,4 @@
-comGB2RegM <- function(y, X, family = c('comGB2'),
+fitRegComGBII <- function(y, X, family = c('comGB2'),
                        control = list(print_level = 1,
                                       pars.seed = 113,
                                       pars.init.n = 5, 

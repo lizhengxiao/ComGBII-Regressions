@@ -9,12 +9,12 @@ BIIGReg.solnp <- function(y, X, control = list(print_level = 1,
   # X: design matrix
   
   print_level <- control$print_level
-  n.init <- control$pars.init.n # 初始化参数的组数
+  n.init <- control$pars.init.n 
   pars.seed <- control$pars.seed
   tol.rel <- control$tol.rel
   rho <- control$rho
   
-  k <- dim(X)[2] # 参数个数
+  k <- dim(X)[2] 
   
   mod.init <- pars.initialization(y = y, X = X)
   beta.init <- mod.init$beta.init
@@ -74,14 +74,11 @@ BIIGReg.solnp <- function(y, X, control = list(print_level = 1,
   row.names(alpha.init.mat) <- c('p2', 
                                  'sigma1', 'sigma2', 
                                  'delta1')
-  opt.result <- rep(0, n.init) # 定义存储优化结果的向量
+  opt.result <- rep(0, n.init) 
   mReg.list <- list()
   for (j in 1:n.init) {
-    # 生成随机数
     random_nums <- rnorm(4, 0, 1)
-    # 判断条件是否符合要求
     while ((random_nums[4] < 0)|(random_nums[1] < log(2))) {
-      # 如果不符合要求，重新生成随机数
       random_nums <-  rnorm(4, 0, 1)
     }
     alpha.init <- random_nums
@@ -101,8 +98,6 @@ BIIGReg.solnp <- function(y, X, control = list(print_level = 1,
                                    tol = tol.rel,
                                    trace = print_level))
     }, error = function(e) {
-      # 处理错误的代码
-      # 可以使用message()函数来输出错误信息
       message('Perform the next parameter initialization')
     })
     mReg.list[[j]] <- mReg
@@ -133,13 +128,7 @@ BIIGReg.solnp <- function(y, X, control = list(print_level = 1,
 
 
 
-# model <- BIIGReg.solnp(y = y, 
-#                         X = X, 
-#                         control = list(pars.init.n = 1))
-# model$X
-# model$estimate
-# model$Hessian
-# class <- 'original'
+
 summary.BIIG <- function(model, class = c('original', 
                                            'transformed')){
   pars <- model$estimate
@@ -203,8 +192,5 @@ summary.BIIG <- function(model, class = c('original',
   out <- list(summarytable = summarytable)
   return(out)
 }
-
-# summary.BIIG(model = model, class = 'original')
-# summary.BIIG(model = model, class = 'transformed')
 
 
