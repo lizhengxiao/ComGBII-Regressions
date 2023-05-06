@@ -23,7 +23,7 @@ source('functions-comGB2-distribution.r', local = TRUE)
 # model fitting
 # =========================================================
 mycontrol <- list(pars.seed = 3223, # Random number seeds
-                  pars.init.n = 5, 
+                  pars.init.n = 5, # final initialization parameters with multiple sets of random generation.
                   rho = 0.1, 
                   tol.rel = 1.0e-8)
 
