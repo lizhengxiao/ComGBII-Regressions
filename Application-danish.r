@@ -6,7 +6,7 @@ data("danish") # read the data
 data <- data.table(danish)
 y <- as.numeric(data$danish)
 summary(y); mean(y); sd(y)
-X = model.matrix( ~ 1, data = data.frame(y = y)) # degsin matrix
+X = model.matrix( ~ 1, data = data.frame(y = y)) # design matrix
 
 source('1-comGB2-model-solnp.r', local = TRUE)
 source('2-GBIIG-model-solnp.r', local = TRUE)
@@ -22,12 +22,13 @@ source('functions-comGB2-distribution.r', local = TRUE)
 # =========================================================
 # model fitting
 # =========================================================
-mycontrol <- list(pars.seed = 3223, 
-                  pars.init.n = 5, rho = 0.1, 
+mycontrol <- list(pars.seed = 3223, # Random number seeds
+                  pars.init.n = 5, 
+                  rho = 0.1, 
                   tol.rel = 1.0e-8)
 
 m.comGB2 <- comGB2Reg.solnp(y = y, X = X, control = mycontrol)
-summary.comGB2(model = m.comGB2, class = 'transformed') 
+summary.comGB2(model = m.comGB2, class = 'transformed') # shows the estimates for beta_0, p_1, p_2, tau_1, tau_2, nu_1 and nu_2
 
 m.GBIIG <- GBIIGReg.solnp(y = y, X = X, control = mycontrol)
 summary.GBIIG(model = m.GBIIG, class = 'transformed')
@@ -83,6 +84,6 @@ round(results.mat[order(results.mat[,2+7]), ], 3) # NULL sorting
 round(results.mat[order(results.mat[,3+7]), ], 3) # AIC sorting
 results.mat[order(results.mat[,4+7]), ] # BIC sorting
 
-results.mat
+round(results.mat, 2)
 
 

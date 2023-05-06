@@ -8,6 +8,8 @@ This project provide the R codes for the paper '[A new class of composite GBII r
 
 - other `.r` files contains the sub-models dicussed in this paper, including GBIIG, BIIG, BG, IBG, PG and IPG.
 
+- `functions-fit-comGBIIReg.r` provides the estimation methods for all seven sub-models proposed in this paper.
+
 - ``Case-I-simulation.r`` shows the simulation study to demonstrate the validity of parameter estimates.
 
-- `comGB2RegM.r` contains estimation results for all seven sub-models proposed in this paper.
+
